@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>KOI Mini Estanques</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --negro:#282319;
+  --naranja:#EB5A37;
+  --crema:#EBE1BE;
+  --verde:#505A1E;
+  --blanco:#fff;
+}
+html{scroll-behavior:smooth;}
+body{font-family:'Lato',sans-serif;color:var(--negro);background:var(--blanco);}
+h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;}
+a{text-decoration:none;color:inherit;}
+img{max-width:100%;height:auto;}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;width:100%;z-index:200;background:rgba(235,225,190,0.97);backdrop-filter:blur(8px);border-bottom:1px solid rgba(40,35,25,0.1);transition:box-shadow .3s;}
+nav.scrolled{box-shadow:0 2px 16px rgba(40,35,25,0.1);}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 1.5rem;display:flex;align-items:center;justify-content:center;height:60px;position:relative;}
+.nav-links{display:flex;gap:1.5rem;list-style:none;align-items:center;flex-wrap:wrap;justify-content:center;}
+.nav-links a{font-size:.82rem;letter-spacing:.08em;text-transform:uppercase;color:var(--negro);transition:color .2s;padding:.25rem 0;border-bottom:2px solid transparent;}
+.nav-links a:hover,.nav-links a.active{color:var(--naranja);border-bottom-color:var(--naranja);}
+.nav-links .nav-cta{background:var(--verde);color:var(--blanco);padding:.45rem 1.1rem;border-radius:2px;border-bottom:none!important;transition:background .2s!important;}
+.nav-links .nav-cta:hover{background:var(--naranja)!important;color:var(--blanco)!important;}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px;position:absolute;right:1.5rem;top:50%;transform:translateY(-50%);}
+.hamburger span{width:24px;height:2px;background:var(--negro);display:block;transition:.3s;}
+.mobile-menu{display:none;flex-direction:column;background:var(--crema);border-top:1px solid rgba(40,35,25,0.1);}
+.mobile-menu a{padding:.85rem 1.5rem;font-size:.9rem;letter-spacing:.08em;text-transform:uppercase;border-bottom:1px solid rgba(40,35,25,.08);color:var(--negro);}
+.mobile-menu a:hover{color:var(--naranja);}
+.mobile-menu.open{display:flex;}
+
+/* ── SECCIONES BASE ── */
+section{scroll-margin-top:60px;}
+.section-inner{max-width:1100px;margin:0 auto;padding:0 1.5rem;}
+.section-tag{font-size:.75rem;letter-spacing:.2em;text-transform:uppercase;color:var(--naranja);margin-bottom:.5rem;display:block;}
+.section-title{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:600;color:var(--negro);margin-bottom:1rem;line-height:1.15;}
+.section-sub{font-size:1rem;color:rgba(40,35,25,.65);line-height:1.8;}
+.btn-primary{display:inline-block;background:var(--naranja);color:var(--blanco);padding:.85rem 2rem;border-radius:2px;font-size:.88rem;letter-spacing:.1em;text-transform:uppercase;transition:background .2s;border:none;cursor:pointer;}
+.btn-primary:hover{background:var(--negro);color:var(--blanco);}
+.btn-secondary{display:inline-block;background:transparent;color:var(--negro);padding:.85rem 2rem;border:1.5px solid var(--negro);border-radius:2px;font-size:.88rem;letter-spacing:.1em;text-transform:uppercase;transition:all .2s;}
+.btn-secondary:hover{background:var(--negro);color:var(--crema);}
+.btn-wa{display:inline-flex;align-items:center;gap:.6rem;background:var(--naranja);color:var(--blanco);padding:.9rem 2rem;border-radius:2px;font-size:.88rem;letter-spacing:.1em;text-transform:uppercase;transition:background .2s;}
+.btn-wa:hover{background:#c9441c;}
+
+/* ── HERO ── */
+#inicio{padding-top:60px;background:var(--crema);min-height:100vh;display:flex;align-items:flex-start;justify-content:center;position:relative;overflow:hidden;}
+.hero-deco{position:absolute;border-radius:50%;pointer-events:none;border:1px solid rgba(40,35,25,.07);}
+.hero-deco.d1{width:min(540px,90vw);height:min(540px,90vw);left:50%;top:50%;transform:translate(-50%,-50%);}
+.hero-deco.d2{width:min(720px,120vw);height:min(720px,120vw);left:50%;top:50%;transform:translate(-50%,-50%);}
+.hero-inner{width:100%;max-width:700px;padding:.25rem 1.5rem 4rem;display:flex;flex-direction:column;align-items:center;text-align:center;}
+.hero-logo-wrap{margin-bottom:1.5rem;}
+.hero-logo-wrap img{width:min(400px,80vw);height:min(400px,80vw);object-fit:contain;display:block;}
+.hero-text .section-tag{margin-bottom:.5rem;}
+.hero-text h1{font-size:clamp(1.8rem,5vw,3.2rem);font-weight:600;line-height:1.15;margin-bottom:1.25rem;}
+.hero-text h1 em{color:var(--naranja);font-style:italic;}
+.hero-text .lead{font-size:clamp(.9rem,2vw,1.05rem);color:rgba(40,35,25,.72);line-height:1.8;max-width:480px;margin:0 auto;}
+
+/* ── PRODUCTOS ── */
+#productos{padding:5rem 0;background:var(--blanco);}
+.prod-header{text-align:center;margin-bottom:3rem;}
+.prod-header .section-sub{max-width:520px;margin:.5rem auto 0;}
+.prod-main{display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;align-items:center;background:var(--crema);border-radius:10px;padding:2.5rem;}
+.badge{display:inline-block;background:var(--naranja);color:var(--blanco);font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;padding:.3rem .8rem;border-radius:2px;margin-bottom:1rem;}
+.prod-info h3{font-size:clamp(1.5rem,3vw,2rem);margin-bottom:.75rem;}
+.prod-info p{font-size:.95rem;color:rgba(40,35,25,.7);line-height:1.8;margin-bottom:1.5rem;}
+.specs-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:2rem;}
+.spec-item{background:var(--blanco);border-radius:4px;padding:.75rem 1rem;}
+.spec-item strong{display:block;color:var(--naranja);font-size:1.05rem;}
+.spec-item span{font-size:.72rem;color:rgba(40,35,25,.55);text-transform:uppercase;letter-spacing:.05em;}
+.prod-nota{font-size:.8rem;color:rgba(40,35,25,.5);margin-top:.75rem;}
+
+/* ── ACCESORIOS ── */
+#accesorios{padding:5rem 0;background:var(--crema);}
+.acc-header{margin-bottom:2.5rem;}
+.acc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1.25rem;}
+.acc-card{background:var(--blanco);border-radius:10px;padding:1.5rem 1.25rem;text-align:center;transition:transform .2s,box-shadow .2s,border-color .2s;border:1.5px solid transparent;}
+.acc-card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(40,35,25,.1);border-color:var(--naranja);}
+.acc-icon{width:56px;height:56px;margin:0 auto .85rem;border-radius:50%;background:var(--crema);display:flex;align-items:center;justify-content:center;font-size:1.6rem;}
+.acc-card h4{font-size:1rem;margin-bottom:.35rem;}
+.acc-card p{font-size:.8rem;color:rgba(40,35,25,.6);line-height:1.6;}
+.acc-footer{text-align:center;margin-top:2rem;font-size:.9rem;color:rgba(40,35,25,.6);}
+.acc-footer a{color:var(--verde);font-weight:700;}
+.acc-footer a:hover{color:var(--naranja);}
+
+/* ── ASESORAMIENTO ── */
+#asesoramiento{padding:5rem 0;background:var(--verde);color:var(--blanco);}
+.asesora-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;}
+.asesora-text .section-tag{color:var(--crema);}
+.asesora-text .section-title{color:var(--blanco);}
+.asesora-text .lead{color:rgba(235,225,190,.78);line-height:1.8;margin-bottom:2rem;font-size:.95rem;}
+.steps{display:flex;flex-direction:column;gap:1.25rem;}
+.step{display:flex;gap:1.25rem;align-items:flex-start;}
+.step-n{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--crema);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--crema);flex-shrink:0;}
+.step-t h4{font-size:1rem;color:var(--blanco);margin-bottom:.2rem;}
+.step-t p{font-size:.84rem;color:rgba(235,225,190,.7);line-height:1.6;}
+.wa-box{background:rgba(235,225,190,.12);border:1.5px solid rgba(235,225,190,.22);border-radius:10px;padding:2.5rem;text-align:center;}
+.wa-box h3{font-size:clamp(1.4rem,3vw,1.8rem);color:var(--blanco);margin-bottom:.75rem;}
+.wa-box p{color:rgba(235,225,190,.72);font-size:.9rem;margin-bottom:1.75rem;line-height:1.7;}
+.wa-box .lugar{margin-top:1.25rem;font-size:.78rem;color:rgba(235,225,190,.45);}
+
+/* ── INFO / BLOG ── */
+#info{padding:5rem 0;background:var(--blanco);}
+.info-header{margin-bottom:2.5rem;}
+.blog-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.75rem;}
+.blog-card{border:1px solid rgba(40,35,25,.1);border-radius:10px;overflow:hidden;transition:box-shadow .2s;display:block;}
+.blog-card:hover{box-shadow:0 6px 24px rgba(40,35,25,.1);}
+.blog-thumb{height:160px;display:flex;align-items:center;justify-content:center;font-size:2.75rem;}
+.blog-thumb.agua{background:#d4ecd4;}
+.blog-thumb.planta{background:#dcedc8;}
+.blog-thumb.pez{background:#ffe0b2;}
+.blog-body{padding:1.4rem;}
+.blog-tag{font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--naranja);margin-bottom:.5rem;display:block;}
+.blog-card h4{font-size:1.05rem;margin-bottom:.5rem;line-height:1.3;color:var(--negro);}
+.blog-card p{font-size:.83rem;color:rgba(40,35,25,.62);line-height:1.7;margin-bottom:1rem;}
+.blog-link{font-size:.82rem;color:var(--verde);font-weight:700;}
+.blog-link:hover{color:var(--naranja);}
+
+/* ── CONTACTO ── */
+#contacto{padding:5rem 0;background:var(--crema);}
+.contacto-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start;}
+.contacto-info h2{font-size:clamp(1.8rem,3vw,2.2rem);margin-bottom:1rem;}
+.contacto-info p{font-size:.95rem;color:rgba(40,35,25,.7);line-height:1.8;margin-bottom:2rem;}
+.datos{display:flex;flex-direction:column;gap:1rem;}
+.dato{display:flex;align-items:center;gap:.85rem;}
+.dato-icon{width:38px;height:38px;background:var(--verde);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.dato-icon svg{width:17px;height:17px;fill:var(--blanco);}
+.dato-text span{font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:rgba(40,35,25,.5);display:block;}
+.dato-text strong{font-size:.95rem;}
+.form-box{background:var(--blanco);border-radius:10px;padding:2rem;}
+.form-box h3{font-size:1.4rem;margin-bottom:1.4rem;}
+.fg{margin-bottom:1.1rem;}
+.fg label{display:block;font-size:.78rem;text-transform:uppercase;letter-spacing:.1em;color:rgba(40,35,25,.58);margin-bottom:.4rem;}
+.fg input,.fg textarea,.fg select{width:100%;padding:.72rem 1rem;border:1.5px solid rgba(40,35,25,.15);border-radius:4px;font-family:'Lato',sans-serif;font-size:.95rem;color:var(--negro);background:var(--blanco);transition:border-color .2s;outline:none;-webkit-appearance:none;}
+.fg input:focus,.fg textarea:focus,.fg select:focus{border-color:var(--verde);}
+.fg textarea{height:95px;resize:vertical;}
+.form-submit{width:100%;background:var(--naranja);color:var(--blanco);border:none;padding:.9rem;border-radius:2px;font-size:.88rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:background .2s;font-family:'Lato',sans-serif;}
+.form-submit:hover{background:var(--negro);}
+.form-nota{font-size:.76rem;color:rgba(40,35,25,.48);text-align:center;margin-top:.75rem;}
+
+/* ── FOOTER ── */
+footer{background:var(--negro);color:rgba(235,225,190,.65);padding:3rem 0 2rem;}
+.footer-grid{max-width:1100px;margin:0 auto;padding:0 1.5rem;display:grid;grid-template-columns:2fr 1fr 1fr;gap:2.5rem;}
+.footer-brand h3{font-family:'Cormorant Garamond',serif;font-size:1.35rem;color:var(--crema);margin-bottom:.75rem;}
+.footer-brand p{font-size:.84rem;line-height:1.7;max-width:260px;}
+.fcol h4{font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;color:var(--crema);margin-bottom:1rem;}
+.fcol ul{list-style:none;display:flex;flex-direction:column;gap:.5rem;}
+.fcol ul a{font-size:.84rem;color:rgba(235,225,190,.55);transition:color .2s;}
+.fcol ul a:hover{color:var(--naranja);}
+.footer-bottom{border-top:1px solid rgba(235,225,190,.1);margin-top:2rem;padding-top:1.5rem;text-align:center;font-size:.78rem;color:rgba(235,225,190,.3);max-width:1100px;margin-left:auto;margin-right:auto;padding-left:1.5rem;padding-right:1.5rem;}
+
+/* ── WA FLOTANTE ── */
+.wa-float{position:fixed;bottom:1.5rem;right:1.5rem;z-index:300;width:54px;height:54px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 18px rgba(37,211,102,.4);transition:transform .2s;}
+.wa-float:hover{transform:scale(1.1);}
+.wa-float svg{width:28px;height:28px;fill:white;}
+
+/* ── RESPONSIVE TABLET ── */
+@media(max-width:900px){
+  .prod-main{grid-template-columns:1fr;padding:2rem;}
+  .asesora-grid{grid-template-columns:1fr;gap:2.5rem;}
+  .contacto-grid{grid-template-columns:1fr;gap:2.5rem;}
+  .footer-grid{grid-template-columns:1fr 1fr;gap:2rem;}
+}
+
+/* ── RESPONSIVE MOBILE ── */
+@media(max-width:600px){
+  .nav-links{display:none;}
+  .hamburger{display:flex;}
+  .nav-inner{justify-content:center;}
+  section{scroll-margin-top:60px;}
+  .hero-logo-wrap img{width:min(300px,85vw);height:min(300px,85vw);}
+  .acc-grid{grid-template-columns:repeat(2,1fr);}
+  .blog-grid{grid-template-columns:1fr;}
+  .footer-grid{grid-template-columns:1fr;gap:1.75rem;}
+  .specs-grid{grid-template-columns:1fr 1fr;}
+  .wa-box{padding:1.75rem 1.25rem;}
+  .form-box{padding:1.5rem;}
+  .btn-primary,.btn-secondary,.btn-wa{width:100%;text-align:center;justify-content:center;padding:.85rem 1rem;}
+  .hero-btns{width:100%;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <div class="nav-inner">
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#inicio">Inicio</a></li>
+      <li><a href="#productos">Productos</a></li>
+      <li><a href="#accesorios">Accesorios</a></li>
+      <li><a href="#asesoramiento">Asesoramiento</a></li>
+      <li><a href="#info">Info</a></li>
+      <li><a href="#contacto" class="nav-cta">Contacto</a></li>
+    </ul>
+    <button class="hamburger" onclick="toggleMenu()" aria-label="Abrir menú">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#inicio"        onclick="closeMenu()">Inicio</a>
+    <a href="#productos"     onclick="closeMenu()">Productos</a>
+    <a href="#accesorios"    onclick="closeMenu()">Accesorios</a>
+    <a href="#asesoramiento" onclick="closeMenu()">Asesoramiento</a>
+    <a href="#info"          onclick="closeMenu()">Info & Blog</a>
+    <a href="#contacto"      onclick="closeMenu()">Contacto</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="inicio">
+  <div class="hero-deco d1"></div>
+  <div class="hero-deco d2"></div>
+  <div class="hero-inner">
+    <div class="hero-logo-wrap">
+      <img src="logo.png" alt="KOI Mini Estanques"/>
+    </div>
+    <div class="hero-text">
+      <span class="section-tag">Naturaleza en tu hogar</span>
+      <h1>Mini estanques <em>Koi</em> para espacios pequeños</h1>
+      <p class="lead">Traé la serenidad del agua y la naturaleza a tu patio, balcón o jardín. Estanques de polietileno duraderos, listos para instalar.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTOS -->
+<section id="productos">
+  <div class="section-inner">
+    <div class="prod-header">
+      <span class="section-tag">Nuestro producto estrella</span>
+      <h2 class="section-title">Mini Estanque de Polietileno</h2>
+      <p class="section-sub">Diseñados para quienes quieren disfrutar de un estanque sin obra ni grandes espacios. Ideales para patios, balcones y jardines.</p>
+    </div>
+    <div class="prod-main">
+      <div>
+        <svg viewBox="0 0 400 270" width="100%" xmlns="http://www.w3.org/2000/svg">
+          <rect x="15" y="55" width="370" height="175" rx="16" fill="#505A1E"/>
+          <ellipse cx="200" cy="143" rx="162" ry="72" fill="#3d4618"/>
+          <ellipse cx="200" cy="143" rx="145" ry="62" fill="#7ab8c8"/>
+          <ellipse cx="200" cy="143" rx="125" ry="52" fill="#5aa0b5"/>
+          <ellipse cx="135" cy="128" rx="38" ry="17" fill="#EB5A37" opacity=".9" transform="rotate(-25 135 128)"/>
+          <circle cx="150" cy="118" r="5" fill="#282319"/>
+          <ellipse cx="272" cy="152" rx="34" ry="15" fill="#EBE1BE" opacity=".85" transform="rotate(20 272 152)"/>
+          <circle cx="258" cy="143" r="4.5" fill="#282319"/>
+          <ellipse cx="185" cy="165" rx="24" ry="10" fill="#EB5A37" opacity=".7" transform="rotate(10 185 165)"/>
+          <circle cx="78" cy="82" r="18" fill="#505A1E"/><rect x="76" y="54" width="4" height="28" rx="2" fill="#282319" opacity=".5"/>
+          <ellipse cx="78" cy="51" rx="10" ry="14" fill="#505A1E" opacity=".75"/>
+          <circle cx="322" cy="78" r="14" fill="#505A1E"/><rect x="320" y="54" width="4" height="24" rx="2" fill="#282319" opacity=".5"/>
+          <circle cx="120" cy="143" r="3" fill="white" opacity=".3"/>
+          <circle cx="200" cy="118" r="2" fill="white" opacity=".25"/>
+          <text x="200" y="248" text-anchor="middle" font-family="Lato,sans-serif" font-size="11" fill="#505A1E" opacity=".7" letter-spacing="3">70 × 30 cm · 85 litros</text>
+        </svg>
+      </div>
+      <div class="prod-info">
+        <span class="badge">Producto principal</span>
+        <h3>Mini Estanque KOI 85 L</h3>
+        <p>Fabricado en polietileno de alta densidad (PEAD), resistente a los rayos UV, al frío y al calor. No requiere obra. Se instala en minutos y dura años.</p>
+        <div class="specs-grid">
+          <div class="spec-item"><strong>70 × 30 cm</strong><span>Dimensiones</span></div>
+          <div class="spec-item"><strong>85 litros</strong><span>Capacidad</span></div>
+          <div class="spec-item"><strong>Polietileno HD</strong><span>Material</span></div>
+          <div class="spec-item"><strong>Sin obra</strong><span>Instalación</span></div>
+        </div>
+        <a href="https://wa.me/5492617170952?text=Hola!%20Quiero%20consultar%20el%20precio%20del%20Mini%20Estanque%20KOI%2085L" target="_blank" class="btn-primary">Consultar precio por WhatsApp</a>
+        <p class="prod-nota">Consultá disponibilidad y envío a tu zona.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ACCESORIOS -->
+<section id="accesorios">
+  <div class="section-inner">
+    <div class="acc-header">
+      <span class="section-tag">Complementá tu estanque</span>
+      <h2 class="section-title">Accesorios y decoración</h2>
+      <p class="section-sub">Todo lo que necesitás para crear un ecosistema equilibrado y bello.</p>
+    </div>
+    <div class="acc-grid">
+      <a href="https://wa.me/5492617170952?text=Hola!%20Me%20interesan%20los%20peces%20koi" target="_blank" class="acc-card">
+        <div class="acc-icon">🐠</div>
+        <h4>Peces Koi</h4>
+        <p>Variedades seleccionadas aptas para mini estanques.</p>
+      </a>
+      <a href="https://wa.me/5492617170952?text=Hola!%20Me%20interesan%20los%20budas%20y%20figuras%20zen" target="_blank" class="acc-card">
+        <div class="acc-icon">🪷</div>
+        <h4>Budas y figuras zen</h4>
+        <p>Decoraciones de cerámica y resina para tu espacio.</p>
+      </a>
+      <a href="https://wa.me/5492617170952?text=Hola!%20Me%20interesan%20las%20plantas%20acu%C3%A1ticas" target="_blank" class="acc-card">
+        <div class="acc-icon">🌿</div>
+        <h4>Plantas acuáticas</h4>
+        <p>Oxigenan el agua, dan sombra y embellecen.</p>
+      </a>
+      <a href="https://wa.me/5492617170952?text=Hola!%20Me%20interesan%20las%20cascadas%20y%20fuentes" target="_blank" class="acc-card">
+        <div class="acc-icon">💧</div>
+        <h4>Cascadas y fuentes</h4>
+        <p>Movimiento y sonido del agua con bomba incluida.</p>
+      </a>
+      <a href="https://wa.me/5492617170952?text=Hola!%20Me%20interesan%20las%20piedras%20y%20sustrato" target="_blank" class="acc-card">
+        <div class="acc-icon">🪨</div>
+        <h4>Piedras y sustrato</h4>
+        <p>Guijarros de río y piedras volcánicas.</p>
+      </a>
+      <a href="https://wa.me/5492617170952?text=Hola!%20Quiero%20ver%20m%C3%A1s%20decoraciones" target="_blank" class="acc-card">
+        <div class="acc-icon">🏮</div>
+        <h4>Otras decoraciones</h4>
+        <p>Linternas, tortugas, puentes en miniatura y más.</p>
+      </a>
+    </div>
+    <p class="acc-footer">¿Buscás algo específico? <a href="https://wa.me/5492617170952?text=Hola!%20Quiero%20consultar%20sobre%20accesorios" target="_blank">Escribinos por WhatsApp</a> y armamos tu estanque ideal.</p>
+  </div>
+</section>
+
+<!-- ASESORAMIENTO -->
+<section id="asesoramiento">
+  <div class="section-inner asesora-grid">
+    <div class="asesora-text">
+      <span class="section-tag">Te acompañamos</span>
+      <h2 class="section-title">Asesoramiento personalizado</h2>
+      <p class="lead">No importa si es tu primer estanque o si querés ampliar el que ya tenés. Te guiamos desde la elección hasta el mantenimiento, sin costo extra.</p>
+      <div class="steps">
+        <div class="step">
+          <div class="step-n">1</div>
+          <div class="step-t"><h4>Contanos tu espacio</h4><p>Medidas, luz disponible, adentro o afuera. Eso nos ayuda a recomendarte lo mejor.</p></div>
+        </div>
+        <div class="step">
+          <div class="step-n">2</div>
+          <div class="step-t"><h4>Te armamos una propuesta</h4><p>Estanque + accesorios + plantas + peces según tu presupuesto y gusto.</p></div>
+        </div>
+        <div class="step">
+          <div class="step-n">3</div>
+          <div class="step-t"><h4>Te acompañamos luego</h4><p>Guía de mantenimiento, consejos de temporada y soporte post-compra.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="wa-box">
+      <h3>Empezá tu estanque hoy</h3>
+      <p>Escribinos por WhatsApp y recibís asesoramiento gratuito. Te respondemos rápido y sin compromiso.</p>
+      <a href="https://wa.me/5492617170952?text=Hola!%20Me%20gustar%C3%ADa%20recibir%20asesoramiento%20para%20armar%20mi%20mini%20estanque" target="_blank" class="btn-wa">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Escribir por WhatsApp
+      </a>
+      <p class="lugar">Mendoza · Argentina</p>
+    </div>
+  </div>
+</section>
+
+<!-- INFO / BLOG -->
+<section id="info">
+  <div class="section-inner">
+    <div class="info-header">
+      <span class="section-tag">Aprendé y disfrutá</span>
+      <h2 class="section-title">Información útil</h2>
+      <p class="section-sub">Consejos, guías y todo lo que necesitás saber para cuidar tu mini estanque.</p>
+    </div>
+    <div class="blog-grid">
+      <a href="https://wa.me/5492617170952?text=Hola!%20Quiero%20saber%20m%C3%A1s%20sobre%20el%20mantenimiento%20del%20agua" target="_blank" class="blog-card">
+        <div class="blog-thumb agua">💧</div>
+        <div class="blog-body">
+          <span class="blog-tag">Mantenimiento</span>
+          <h4>¿Con qué frecuencia cambiar el agua?</h4>
+          <p>La calidad del agua es clave para la salud de tus peces y plantas.</p>
+          <span class="blog-link">Consultar →</span>
+        </div>
+      </a>
+      <a href="https://wa.me/5492617170952?text=Hola!%20Quiero%20saber%20m%C3%A1s%20sobre%20plantas%20para%20estanque" target="_blank" class="blog-card">
+        <div class="blog-thumb planta">🌿</div>
+        <div class="blog-body">
+          <span class="blog-tag">Plantas</span>
+          <h4>Las mejores plantas para tu mini estanque</h4>
+          <p>Oxigenantes, flotantes, marginales. Te ayudamos a elegir las ideales.</p>
+          <span class="blog-link">Consultar →</span>
+        </div>
+      </a>
+      <a href="https://wa.me/5492617170952?text=Hola!%20Quiero%20saber%20cu%C3%A1ntos%20peces%20puede%20tener%20un%20estanque%20de%2085L" target="_blank" class="blog-card">
+        <div class="blog-thumb pez">🐠</div>
+        <div class="blog-body">
+          <span class="blog-tag">Peces</span>
+          <h4>¿Cuántos peces puede tener un estanque de 85 L?</h4>
+          <p>La regla de oro para no sobrecargar el ecosistema.</p>
+          <span class="blog-link">Consultar →</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACTO -->
+<section id="contacto">
+  <div class="section-inner contacto-grid">
+    <div class="contacto-info">
+      <span class="section-tag">Hablemos</span>
+      <h2>Contacto</h2>
+      <p>Estamos en Mendoza. Respondemos por WhatsApp de lunes a sábado. También podés dejarnos un mensaje y te contactamos a la brevedad.</p>
+      <div class="datos">
+        <div class="dato">
+          <div class="dato-icon">
+            <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          </div>
+          <div class="dato-text"><span>WhatsApp</span><strong>+54 9 2617 17-0952</strong></div>
+        </div>
+        <div class="dato">
+          <div class="dato-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+          </div>
+          <div class="dato-text"><span>Ubicación</span><strong>Mendoza, Argentina</strong></div>
+        </div>
+      </div>
+    </div>
+    <div class="form-box">
+      <h3>Envianos un mensaje</h3>
+      <div class="fg"><label>Tu nombre</label><input type="text" id="fn" placeholder="María García"/></div>
+      <div class="fg"><label>Teléfono o email</label><input type="text" id="fc" placeholder="261 xxx xxxx o tu@email.com"/></div>
+      <div class="fg">
+        <label>¿En qué te podemos ayudar?</label>
+        <select id="fa">
+          <option value="">Seleccioná una opción</option>
+          <option>Consulta sobre el estanque</option>
+          <option>Accesorios y decoración</option>
+          <option>Peces y plantas</option>
+          <option>Asesoramiento personalizado</option>
+          <option>Otro</option>
+        </select>
+      </div>
+      <div class="fg"><label>Mensaje</label><textarea id="fm" placeholder="Contanos lo que necesitás..."></textarea></div>
+      <button class="form-submit" onclick="enviarWA()">Enviar por WhatsApp</button>
+      <p class="form-nota">Te redirige a WhatsApp con tu consulta lista para enviar.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <h3>KOI Mini Estanques</h3>
+      <p>Llevamos la serenidad del agua a cada rincón de tu hogar. Mendoza, Argentina.</p>
+    </div>
+    <div class="fcol">
+      <h4>Secciones</h4>
+      <ul>
+        <li><a href="#inicio">Inicio</a></li>
+        <li><a href="#productos">Productos</a></li>
+        <li><a href="#accesorios">Accesorios</a></li>
+        <li><a href="#asesoramiento">Asesoramiento</a></li>
+        <li><a href="#info">Info & Blog</a></li>
+        <li><a href="#contacto">Contacto</a></li>
+      </ul>
+    </div>
+    <div class="fcol">
+      <h4>Contacto</h4>
+      <ul>
+        <li><a href="https://wa.me/5492617170952" target="_blank">WhatsApp</a></li>
+        <li><a href="#contacto">Formulario</a></li>
+        <li><a href="#asesoramiento">Asesoramiento</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2025 KOI Mini Estanques · Mendoza, Argentina</div>
+</footer>
+
+<!-- WA FLOTANTE -->
+<a href="https://wa.me/5492617170952?text=Hola!%20Quiero%20consultar%20sobre%20los%20mini%20estanques%20KOI" target="_blank" class="wa-float" aria-label="WhatsApp">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<script>
+function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('open');}
+function closeMenu(){document.getElementById('mobileMenu').classList.remove('open');}
+
+window.addEventListener('scroll',()=>{
+  document.getElementById('mainNav').classList.toggle('scrolled',window.scrollY>20);
+  highlightNav();
+});
+
+function highlightNav(){
+  const secs=['inicio','productos','accesorios','asesoramiento','info','contacto'];
+  let current='inicio';
+  secs.forEach(id=>{
+    const el=document.getElementById(id);
+    if(el&&window.scrollY>=el.offsetTop-80) current=id;
+  });
+  document.querySelectorAll('.nav-links a').forEach(a=>{
+    a.classList.toggle('active',a.getAttribute('href')==='#'+current);
+  });
+}
+
+function enviarWA(){
+  const n=document.getElementById('fn').value.trim();
+  const c=document.getElementById('fc').value.trim();
+  const a=document.getElementById('fa').value;
+  const m=document.getElementById('fm').value.trim();
+  if(!n||!m){alert('Por favor completá tu nombre y el mensaje.');return;}
+  const txt=`Hola! Soy ${n}${c?' ('+c+')':''}.${a?' Consulto sobre: '+a+'.':''} ${m}`;
+  window.open('https://wa.me/5492617170952?text='+encodeURIComponent(txt),'_blank');
+}
+</script>
+</body>
+</html>
